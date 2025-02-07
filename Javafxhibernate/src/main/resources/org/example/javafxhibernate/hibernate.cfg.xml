@@ -1,0 +1,20 @@
+<hibernate-configuration>
+
+    <session-factory>
+        <property name="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/gestiones</property>
+        <property name="hibernate.connection.username">root</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+
+        <property name="show_sql">true</property>
+        <property name="format_sql">true</property>
+        <property name="hbm2ddl.auto">update</property>
+
+        <!-- Clases que se van a mapear -->
+
+        <mapping class="entities.Libros"></mapping>
+        <mapping class="entities.Autores"></mapping>
+        <mapping class="entities.Socios"></mapping>
+
+    </session-factory>
+</hibernate-configuration>
