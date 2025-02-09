@@ -46,14 +46,40 @@ public class LibrosDAOImpl implements LibrosDAO {
         }
     }
 
-    @Override
-    public List<Libros> findByCriteria(String criterio) {
+    public List<Libros> findByAutor(String autor) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            return session.createQuery("FROM Libros l WHERE l.titulo LIKE :criterio OR l.autor.nombre LIKE :criterio OR l.isbn LIKE :criterio", Libros.class)
-                    .setParameter("criterio", "%" + criterio + "%")
+            return session.createQuery("FROM Libros l WHERE l.autor LIKE :autor", Libros.class)
+                    .setParameter("autor", "%" + autor + "%")
                     .list();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
+
+    public List<Libros> findByTitulo(String nombre) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.createQuery("FROM Libros l WHERE l.titulo LIKE :titulo", Libros.class)
+                    .setParameter("titulo", "%" + nombre + "%")
+                    .list();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public List<Libros> findByIsbn(String isbn) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.createQuery("FROM Libros l WHERE l.isbn = :isbn", Libros.class)
+                    .setParameter("isbn", isbn)
+                    .list();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
 
     @Override
     public List<Libros> findAvailableBooks() {

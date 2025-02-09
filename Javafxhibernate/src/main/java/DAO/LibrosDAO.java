@@ -20,11 +20,25 @@ public interface LibrosDAO {
     boolean deleteById(Integer id);
 
     /**
-     * Busca libros por título, autor o ISBN
-     * @param criterio
-     * @return lista de libros que coinciden con el criterio
+     * Busca libros por autor
+     * @param autor
+     * @return lista de libros que coinciden con el autor
      */
-    List<Libros> findByCriteria(String criterio);
+    List<Libros> findByAutor(String autor);
+
+    /**
+     * Busca libros por titulo
+     * @param titulo
+     * @return lista de libros que coinciden con el nombre
+     */
+    List<Libros> findByTitulo(String titulo);
+
+    /**
+     * Busca libros por ISBN
+     * @param isbn
+     * @return lista de libros que coinciden con el ISBN
+     */
+    List<Libros> findByIsbn(String isbn);
 
     /**
      * Lista todos los libros disponibles que no han sido prestados

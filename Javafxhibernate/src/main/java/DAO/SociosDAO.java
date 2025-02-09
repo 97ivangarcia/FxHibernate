@@ -23,11 +23,18 @@ public interface SociosDAO {
     boolean deleteById(Integer id);
 
     /**
-     * Busca socios por nombre o número de teléfono
-     * @param criterio
-     * @return lista de socios que coinciden con el criterio
+     * Busca socios por nombre
+     * @param nombre
+     * @return lista de socios que coinciden con el nombre
      */
-    List<Socios> findByCriteria(String criterio);
+    List<Socios> findByName(String nombre);
+
+    /**
+     * Busca socios por número de teléfono
+     * @param telefono
+     * @return lista de socios que coinciden con el número de teléfono
+     */
+    List<Socios> findByTelefono(String telefono);
 
     /**
      * Lista todos los socios

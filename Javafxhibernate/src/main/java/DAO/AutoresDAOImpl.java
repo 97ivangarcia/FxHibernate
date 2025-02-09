@@ -1,19 +1,31 @@
 package DAO;
 
 import entities.Autores;
+import Util.HibernateUtil;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import java.util.List;
 
 public class AutoresDAOImpl implements AutoresDAO {
+
     /**
      * Añade un nuevo autor especificando nombre y nacionalidad
      *
-     * @param autores
+     * @param autor
      * @return autor agregado
      */
     @Override
-    public Autores create(Autores autores) {
-        return null;
+    public Autores create(Autores autor) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Transaction transaction = session.beginTransaction();
+            session.save(autor);
+            transaction.commit();
+            return autor; // Autor agregado exitosamente
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null; // Si ocurre un error, retorna null
+        }
     }
 
     /**
@@ -24,7 +36,15 @@ public class AutoresDAOImpl implements AutoresDAO {
      */
     @Override
     public Autores update(Autores autor) {
-        return null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Transaction transaction = session.beginTransaction();
+            session.update(autor);
+            transaction.commit();
+            return autor; // Autor actualizado exitosamente
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null; // Si ocurre un error, retorna null
+        }
     }
 
     /**
@@ -35,7 +55,19 @@ public class AutoresDAOImpl implements AutoresDAO {
      */
     @Override
     public boolean deleteById(Integer id) {
-        return false;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Transaction transaction = session.beginTransaction();
+            Autores autor = session.get(Autores.class, id);
+            if (autor != null) {
+                session.delete(autor);
+                transaction.commit();
+                return true; // El autor fue eliminado exitosamente
+            }
+            return false; // No se encontró el autor para eliminar
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false; // Si ocurre un error, retorna false
+        }
     }
 
     /**
@@ -46,7 +78,14 @@ public class AutoresDAOImpl implements AutoresDAO {
      */
     @Override
     public List<Autores> findByName(String nombre) {
-        return List.of();
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.createQuery("FROM Autores a WHERE a.nombre LIKE :nombre", Autores.class)
+                    .setParameter("nombre", "%" + nombre + "%")
+                    .list();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return List.of(); // Retorna una lista vacía en caso de error
+        }
     }
 
     /**
@@ -56,6 +95,11 @@ public class AutoresDAOImpl implements AutoresDAO {
      */
     @Override
     public List<Autores> findAll() {
-        return List.of();
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.createQuery("FROM Autores", Autores.class).list();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return List.of(); // Retorna una lista vacía en caso de error
+        }
     }
 }
