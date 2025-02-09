@@ -50,6 +50,18 @@
 
 
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>0.0.4</version>
+                <configuration>
+                    <mainClass>org.example.javafxhibernate.Main</mainClass> <!-- Cambia esto si tu clase principal tiene otro nombre -->
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 
 
