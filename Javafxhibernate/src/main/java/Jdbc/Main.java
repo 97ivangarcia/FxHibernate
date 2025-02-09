@@ -1,201 +1,287 @@
 package Jdbc;
 
-import DAO.SociosDAOImpl;
-import DAO.LibrosDAOImpl;
-import DAO.PrestamosDAOImpl;
-import DAO.AutoresDAOImpl;
-import entities.Socios;
-import entities.Libros;
-import entities.Prestamos;
-import entities.Autores;
-import javafx.application.Application;
-import javafx.geometry.Insets;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
-import javafx.stage.Stage;
+import DAO.*;
+import entities.*;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
-public class Main extends Application {
+import java.util.List;
+import java.util.Scanner;
+import java.util.Date;  // Importar la clase Date
 
-    private final SociosDAOImpl sociosDAO = new SociosDAOImpl();
-    private final LibrosDAOImpl librosDAO = new LibrosDAOImpl();
-    private final PrestamosDAOImpl prestamosDAO = new PrestamosDAOImpl();
-    private final AutoresDAOImpl autoresDAO = new AutoresDAOImpl();
+public class Main {
 
     public static void main(String[] args) {
-        launch(args);
-    }
+        Scanner scanner = new Scanner(System.in);
+        AutoresDAO autoresDAO = new AutoresDAOImpl();
+        LibrosDAO librosDAO = new LibrosDAOImpl();
+        SociosDAO sociosDAO = new SociosDAOImpl();
+        PrestamosDAO prestamosDAO = new PrestamosDAOImpl();
 
-    @Override
-    public void start(Stage primaryStage) {
-        primaryStage.setTitle("Gestión de Biblioteca");
+        while (true) {
+            System.out.println("Menu:");
+            System.out.println("1. Agregar Autor");
+            System.out.println("2. Modificar Autor");
+            System.out.println("3. Eliminar Autor");
+            System.out.println("4. Buscar Autor por Nombre");
+            System.out.println("5. Agregar Libro");
+            System.out.println("6. Modificar Libro");
+            System.out.println("7. Eliminar Libro");
+            System.out.println("8. Buscar Libro por Autor");
+            System.out.println("9. Buscar Libro por Titulo");
+            System.out.println("10. Agregar Socio");
+            System.out.println("11. Modificar Socio");
+            System.out.println("12. Eliminar Socio");
+            System.out.println("13. Buscar Socio por Nombre");
+            System.out.println("14. Realizar Préstamo");
+            System.out.println("15. Buscar Préstamos Actuales");
+            System.out.println("16. Historial de Préstamos por Socio");
+            System.out.println("17. Listar Libros Disponibles");
+            System.out.println("0. Salir");
+            System.out.print("Seleccione una opción: ");
 
-        // Crear botones para cada acción
-        Button btnSocios = new Button("Gestionar Socios");
-        Button btnLibros = new Button("Gestionar Libros");
-        Button btnPrestamos = new Button("Gestionar Préstamos");
-        Button btnAutores = new Button("Gestionar Autores");
+            int opcion = scanner.nextInt();
+            scanner.nextLine(); // Consumir el salto de línea después del número
 
-        // Crear contenedor y agregar los botones
-        VBox layout = new VBox(10);
-        layout.setPadding(new Insets(20));
-        layout.getChildren().addAll(btnSocios, btnLibros, btnPrestamos, btnAutores);
+            switch (opcion) {
+                case 1: // Agregar Autor
+                    System.out.print("Ingrese nombre del autor: ");
+                    String nombreAutor = scanner.nextLine();
+                    System.out.print("Ingrese nacionalidad del autor: ");
+                    String nacionalidad = scanner.nextLine();
+                    Autores nuevoAutor = new Autores(null, nombreAutor, nacionalidad);
+                    autoresDAO.create(nuevoAutor);
+                    System.out.println("Autor agregado exitosamente.");
+                    break;
 
-        // Configuración de la escena
-        Scene scene = new Scene(layout, 300, 250);
-        primaryStage.setScene(scene);
+                case 2: // Modificar Autor
+                    System.out.print("Ingrese ID del autor a modificar: ");
+                    int idAutor = scanner.nextInt();
+                    scanner.nextLine(); // Consumir el salto de línea
+                    System.out.print("Ingrese nuevo nombre del autor: ");
+                    String nuevoNombreAutor = scanner.nextLine();
+                    System.out.print("Ingrese nueva nacionalidad del autor: ");
+                    String nuevaNacionalidad = scanner.nextLine();
+                    Autores autorModificar = new Autores(idAutor, nuevoNombreAutor, nuevaNacionalidad);
+                    autoresDAO.update(autorModificar);
+                    System.out.println("Autor modificado exitosamente.");
+                    break;
 
-        // Acciones para cada botón
-        btnSocios.setOnAction(event -> mostrarOpcionesSocios());
-        btnLibros.setOnAction(event -> mostrarOpcionesLibros());
-        btnPrestamos.setOnAction(event -> mostrarOpcionesPrestamos());
-        btnAutores.setOnAction(event -> mostrarOpcionesAutores());
+                case 3: // Eliminar Autor
+                    System.out.print("Ingrese ID del autor a eliminar: ");
+                    int eliminarIdAutor = scanner.nextInt();
+                    scanner.nextLine(); // Consumir el salto de línea
+                    boolean autorEliminado = autoresDAO.deleteById(eliminarIdAutor);
+                    if (autorEliminado) {
+                        System.out.println("Autor eliminado exitosamente.");
+                    } else {
+                        System.out.println("No se encontró el autor.");
+                    }
+                    break;
 
-        primaryStage.show();
-    }
+                case 4: // Buscar Autor por Nombre
+                    System.out.print("Ingrese nombre del autor a buscar: ");
+                    String buscarAutorNombre = scanner.nextLine();
+                    List<Autores> autoresEncontrados = autoresDAO.findByName(buscarAutorNombre);
+                    if (autoresEncontrados.isEmpty()) {
+                        System.out.println("No se encontraron autores con ese nombre.");
+                    } else {
+                        System.out.println("Autores encontrados:");
+                        for (Autores a : autoresEncontrados) {
+                            System.out.println("ID: " + a.getId() + ", Nombre: " + a.getNombre() + ", Nacionalidad: " + a.getNacionalidad());
+                        }
+                    }
+                    break;
 
-    private void mostrarOpcionesSocios() {
-        // Crear ventana secundaria para gestionar socios
-        Stage sociosStage = new Stage();
-        sociosStage.setTitle("Gestión de Socios");
+                case 5: // Agregar Libro
+                    System.out.print("Ingrese título del libro: ");
+                    String tituloLibro = scanner.nextLine();
+                    System.out.print("Ingrese ISBN del libro: ");
+                    String isbn = scanner.nextLine();
+                    System.out.print("Ingrese autor del libro: ");
+                    String autorLibro = scanner.nextLine();
+                    System.out.print("Ingrese editorial del libro: ");
+                    String editorial = scanner.nextLine();
+                    System.out.print("Ingrese año de publicación del libro: ");
+                    int anioPublicacion = scanner.nextInt();
+                    scanner.nextLine(); // Consumir el salto de línea
+                    Libros nuevoLibro = new Libros(null, tituloLibro, isbn, autorLibro, editorial, anioPublicacion);
+                    librosDAO.update(nuevoLibro);
+                    System.out.println("Libro agregado exitosamente.");
+                    break;
 
-        Button btnCrearSocio = new Button("Crear Socio");
-        Button btnBuscarSocio = new Button("Buscar Socio");
-        Button btnActualizarSocio = new Button("Actualizar Socio");
-        Button btnEliminarSocio = new Button("Eliminar Socio");
+                case 6: // Modificar Libro
+                    System.out.print("Ingrese ID del libro a modificar: ");
+                    int idLibro = scanner.nextInt();
+                    scanner.nextLine(); // Consumir el salto de línea
+                    System.out.print("Ingrese nuevo título del libro: ");
+                    String nuevoTituloLibro = scanner.nextLine();
+                    System.out.print("Ingrese nuevo ISBN del libro: ");
+                    String nuevoIsbn = scanner.nextLine();
+                    System.out.print("Ingrese nuevo autor del libro: ");
+                    String nuevoAutorLibro = scanner.nextLine();
+                    System.out.print("Ingrese nueva editorial del libro: ");
+                    String nuevaEditorial = scanner.nextLine();
+                    System.out.print("Ingrese nuevo año de publicación del libro: ");
+                    int nuevoAnioPublicacion = scanner.nextInt();
+                    scanner.nextLine(); // Consumir el salto de línea
+                    Libros libroModificar = new Libros(idLibro, nuevoTituloLibro, nuevoIsbn, nuevoAutorLibro, nuevaEditorial, nuevoAnioPublicacion);
+                    librosDAO.update(libroModificar);
+                    System.out.println("Libro modificado exitosamente.");
+                    break;
 
-        VBox layout = new VBox(10);
-        layout.setPadding(new Insets(20));
-        layout.getChildren().addAll(btnCrearSocio, btnBuscarSocio, btnActualizarSocio, btnEliminarSocio);
+                case 7: // Eliminar Libro
+                    System.out.print("Ingrese ID del libro a eliminar: ");
+                    int idEliminarLibro = scanner.nextInt();
+                    scanner.nextLine(); // Consumir el salto de línea
+                    boolean libroEliminado = librosDAO.deleteById(idEliminarLibro);
+                    if (libroEliminado) {
+                        System.out.println("Libro eliminado exitosamente.");
+                    } else {
+                        System.out.println("No se encontró el libro.");
+                    }
+                    break;
 
-        btnCrearSocio.setOnAction(event -> {
-            // Llamar a la acción de crear socio
-            Socios socio = new Socios(); // Aquí puedes pedir datos al usuario y crear un nuevo socio
-            sociosDAO.create(socio);
-        });
+                case 8: // Buscar Libro por Autor
+                    System.out.print("Ingrese nombre del autor para buscar sus libros: ");
+                    String nombreAutorBuscar = scanner.nextLine();
+                    List<Libros> librosPorAutor = librosDAO.findByAutor(nombreAutorBuscar);
+                    if (librosPorAutor.isEmpty()) {
+                        System.out.println("No se encontraron libros de ese autor.");
+                    } else {
+                        System.out.println("Libros encontrados:");
+                        for (Libros l : librosPorAutor) {
+                            System.out.println("ID: " + l.getId() + ", Título: " + l.getTitulo() + ", ISBN: " + l.getIsbn());
+                        }
+                    }
+                    break;
 
-        btnBuscarSocio.setOnAction(event -> {
-            // Llamar a la acción de buscar socio
-            TextInputDialog dialog = new TextInputDialog();
-            dialog.setTitle("Buscar Socio");
-            dialog.setHeaderText("Introduce el nombre del socio");
-            dialog.showAndWait().ifPresent(name -> {
-                // Llamada al DAO para buscar por nombre
-                sociosDAO.findByName(name).forEach(socio -> System.out.println(socio.getNombre()));
-            });
-        });
+                case 9: // Buscar Libro por Título
+                    System.out.print("Ingrese título del libro a buscar: ");
+                    String tituloLibroBuscar = scanner.nextLine();
+                    List<Libros> librosPorTitulo = librosDAO.findByTitulo(tituloLibroBuscar);
+                    if (librosPorTitulo.isEmpty()) {
+                        System.out.println("No se encontraron libros con ese título.");
+                    } else {
+                        System.out.println("Libros encontrados:");
+                        for (Libros l : librosPorTitulo) {
+                            System.out.println("ID: " + l.getId() + ", Título: " + l.getTitulo() + ", ISBN: " + l.getIsbn());
+                        }
+                    }
+                    break;
 
-        btnActualizarSocio.setOnAction(event -> {
-            // Llamar a la acción de actualizar socio
-            // Este proceso debe permitir al usuario seleccionar un socio y actualizar sus datos
-        });
+                case 10: // Agregar Socio
+                    System.out.print("Ingrese nombre del socio: ");
+                    String nombreSocio = scanner.nextLine();
+                    System.out.print("Ingrese dirección del socio: ");
+                    String direccionSocio = scanner.nextLine();
+                    System.out.print("Ingrese teléfono del socio: ");
+                    String telefonoSocio = scanner.nextLine();
+                    Socios nuevoSocio = new Socios(null, nombreSocio, direccionSocio, telefonoSocio);
+                    sociosDAO.create(nuevoSocio);
+                    System.out.println("Socio agregado exitosamente.");
+                    break;
 
-        btnEliminarSocio.setOnAction(event -> {
-            // Llamar a la acción de eliminar socio
-            // Aquí puedes pedir al usuario un ID para eliminar un socio
-        });
+                case 11: // Modificar Socio
+                    System.out.print("Ingrese ID del socio a modificar: ");
+                    int idSocio = scanner.nextInt();
+                    scanner.nextLine(); // Consumir el salto de línea
+                    System.out.print("Ingrese nuevo nombre del socio: ");
+                    String nuevoNombreSocio = scanner.nextLine();
+                    System.out.print("Ingrese nueva dirección del socio: ");
+                    String nuevaDireccionSocio = scanner.nextLine();
+                    System.out.print("Ingrese nuevo teléfono del socio: ");
+                    String nuevoTelefonoSocio = scanner.nextLine();
+                    Socios socioModificar = new Socios(idSocio, nuevoNombreSocio, nuevaDireccionSocio, nuevoTelefonoSocio);
+                    sociosDAO.update(socioModificar);
+                    System.out.println("Socio modificado exitosamente.");
+                    break;
 
-        Scene scene = new Scene(layout, 300, 250);
-        sociosStage.setScene(scene);
-        sociosStage.show();
-    }
+                case 12: // Eliminar Socio
+                    System.out.print("Ingrese ID del socio a eliminar: ");
+                    int idEliminarSocio = scanner.nextInt();
+                    scanner.nextLine(); // Consumir el salto de línea
+                    boolean socioEliminado = sociosDAO.deleteById(idEliminarSocio);
+                    if (socioEliminado) {
+                        System.out.println("Socio eliminado exitosamente.");
+                    } else {
+                        System.out.println("No se encontró el socio.");
+                    }
+                    break;
 
-    private void mostrarOpcionesLibros() {
-        // Crear ventana secundaria para gestionar libros
-        Stage librosStage = new Stage();
-        librosStage.setTitle("Gestión de Libros");
+                case 13: // Buscar Socio por Nombre
+                    System.out.print("Ingrese nombre del socio a buscar: ");
+                    String buscarSocioNombre = scanner.nextLine();
+                    List<Socios> sociosEncontrados = sociosDAO.findByName(buscarSocioNombre);
+                    if (sociosEncontrados.isEmpty()) {
+                        System.out.println("No se encontraron socios con ese nombre.");
+                    } else {
+                        System.out.println("Socios encontrados:");
+                        for (Socios s : sociosEncontrados) {
+                            System.out.println("ID: " + s.getId() + ", Nombre: " + s.getNombre() + ", Teléfono: " + s.getTelefono());
+                        }
+                    }
+                    break;
 
-        Button btnBuscarLibro = new Button("Buscar Libro");
-        Button btnActualizarLibro = new Button("Actualizar Libro");
-        Button btnEliminarLibro = new Button("Eliminar Libro");
+               /* case 14: // Realizar Préstamo
+                    System.out.print("Ingrese ID del libro a prestar: ");
+                    int libroIdPrestamo = scanner.nextInt();
+                System.out.print("Ingrese ID del socio: ");
+                int socioIdPrestamo = scanner.nextInt();
+                scanner.nextLine(); // Consumir el salto de línea
+                Libros libroParaPrestamo = librosDAO.findById(libroIdPrestamo);
+                Socios socioParaPrestamo = sociosDAO.findById(socioIdPrestamo);
+                if (libroParaPrestamo != null && socioParaPrestamo != null) {
+                    Prestamos nuevoPrestamo = new Prestamos(null, libroParaPrestamo, socioParaPrestamo, new Date(), null);
+                    prestamosDAO.create(nuevoPrestamo);
+                    System.out.println("Préstamo realizado exitosamente.");
+                } else {
+                    System.out.println("Libro o socio no encontrado.");
+                }
+                break;*/
 
-        VBox layout = new VBox(10);
-        layout.setPadding(new Insets(20));
-        layout.getChildren().addAll(btnBuscarLibro, btnActualizarLibro, btnEliminarLibro);
+                case 14: // Buscar Préstamos Actuales
+                    List<Prestamos> prestamosActivos = prestamosDAO.findCurrentlyLoanedBooks();
+                    if (prestamosActivos.isEmpty()) {
+                        System.out.println("No hay libros prestados actualmente.");
+                    } else {
+                        System.out.println("Libros prestados:");
+                        for (Prestamos p : prestamosActivos) {
+                            System.out.println("Libro: " + p.getLibro().getTitulo() + ", Socio: " + p.getSocio().getNombre() + ", Fecha Préstamo: " + p.getFechaPrestamo());
+                        }
+                    }
+                    break;
 
-        btnBuscarLibro.setOnAction(event -> {
-            // Llamar a la acción de buscar libro
-            TextInputDialog dialog = new TextInputDialog();
-            dialog.setTitle("Buscar Libro");
-            dialog.setHeaderText("Introduce el título del libro");
-            dialog.showAndWait().ifPresent(title -> {
-                librosDAO.findByTitulo(title).forEach(libro -> System.out.println(libro.getTitulo()));
-            });
-        });
+                case 16: // Historial de Préstamos por Socio
+                    System.out.print("Ingrese ID del socio para ver su historial de préstamos: ");
+                    int socioIdHistorial = scanner.nextInt();
+                    scanner.nextLine(); // Consumir el salto de línea
+                    List<Prestamos> historialPrestamos = prestamosDAO.findLoanHistoryBySocio(socioIdHistorial);
+                    if (historialPrestamos.isEmpty()) {
+                        System.out.println("No se encontraron préstamos para este socio.");
+                    } else {
+                        System.out.println("Historial de préstamos:");
+                        for (Prestamos p : historialPrestamos) {
+                            System.out.println("Libro: " + p.getLibro().getTitulo() + ", Fecha de Préstamo: " + p.getFechaPrestamo());
+                        }
+                    }
+                    break;
 
-        btnActualizarLibro.setOnAction(event -> {
-            // Llamar a la acción de actualizar libro
-            // Este proceso debe permitir al usuario seleccionar un libro y actualizar sus datos
-        });
+                case 17: // Listar Libros Disponibles
+                    List<Libros> librosDisponibles = librosDAO.findAvailableBooks();
+                    System.out.println("Libros disponibles:");
+                    for (Libros l : librosDisponibles) {
+                        System.out.println("ID: " + l.getId() + ", Título: " + l.getTitulo());
+                    }
+                    break;
 
-        btnEliminarLibro.setOnAction(event -> {
-            // Llamar a la acción de eliminar libro
-            // Aquí puedes pedir al usuario un ID para eliminar un libro
-        });
+                case 0: // Salir
+                    System.out.println("Gracias por usar el sistema.");
+                    return;
 
-        Scene scene = new Scene(layout, 300, 250);
-        librosStage.setScene(scene);
-        librosStage.show();
-    }
-
-    private void mostrarOpcionesPrestamos() {
-        // Crear ventana secundaria para gestionar préstamos
-        Stage prestamosStage = new Stage();
-        prestamosStage.setTitle("Gestión de Préstamos");
-
-        Button btnRegistrarPrestamo = new Button("Registrar Préstamo");
-        Button btnVerPrestamos = new Button("Ver Préstamos Actuales");
-
-        VBox layout = new VBox(10);
-        layout.setPadding(new Insets(20));
-        layout.getChildren().addAll(btnRegistrarPrestamo, btnVerPrestamos);
-
-        btnRegistrarPrestamo.setOnAction(event -> {
-            // Llamar a la acción de registrar préstamo
-            Prestamos prestamo = new Prestamos(); // Aquí puedes pedir datos al usuario
-            prestamosDAO.create(prestamo);
-        });
-
-        btnVerPrestamos.setOnAction(event -> {
-            // Llamar a la acción de ver préstamos actuales
-            prestamosDAO.findCurrentlyLoanedBooks().forEach(prestamo -> System.out.println(prestamo.getLibro().getTitulo()));
-        });
-
-        Scene scene = new Scene(layout, 300, 250);
-        prestamosStage.setScene(scene);
-        prestamosStage.show();
-    }
-
-    private void mostrarOpcionesAutores() {
-        // Crear ventana secundaria para gestionar autores
-        Stage autoresStage = new Stage();
-        autoresStage.setTitle("Gestión de Autores");
-
-        Button btnCrearAutor = new Button("Crear Autor");
-        Button btnBuscarAutor = new Button("Buscar Autor");
-
-        VBox layout = new VBox(10);
-        layout.setPadding(new Insets(20));
-        layout.getChildren().addAll(btnCrearAutor, btnBuscarAutor);
-
-        btnCrearAutor.setOnAction(event -> {
-            // Llamar a la acción de crear autor
-            Autores autor = new Autores(); // Aquí puedes pedir datos al usuario
-            autoresDAO.create(autor);
-        });
-
-        btnBuscarAutor.setOnAction(event -> {
-            // Llamar a la acción de buscar autor
-            TextInputDialog dialog = new TextInputDialog();
-            dialog.setTitle("Buscar Autor");
-            dialog.setHeaderText("Introduce el nombre del autor");
-            dialog.showAndWait().ifPresent(name -> {
-                autoresDAO.findByName(name).forEach(autor -> System.out.println(autor.getNombre()));
-            });
-        });
-
-        Scene scene = new Scene(layout, 300, 250);
-        autoresStage.setScene(scene);
-        autoresStage.show();
+                default:
+                    System.out.println("Opción no válida. Intente nuevamente.");
+            }
+        }
     }
 }
