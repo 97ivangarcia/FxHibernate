@@ -12,10 +12,10 @@
 
         <!-- Clases que se van a mapear -->
 
-        <mapping class="entities.Libros"></mapping>
-        <mapping class="entities.Autores"></mapping>
-        <mapping class="entities.Socios"></mapping>
-        <mapping class="entities.Prestamos"></mapping>
+        <mapping class="org.example.entities.Libros"></mapping>
+        <mapping class="org.example.entities.Autores"></mapping>
+        <mapping class="org.example.entities.Socios"></mapping>
+        <mapping class="org.example.entities.Prestamos"></mapping>
 
     </session-factory>
 </hibernate-configuration>
