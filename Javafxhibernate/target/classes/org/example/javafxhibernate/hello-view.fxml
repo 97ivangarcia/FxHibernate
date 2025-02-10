@@ -1,61 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.geometry.Pos?>
 
-<VBox xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.2-ea" fx:controller="org.example.javafxhibernate.HelloController">
-    <HBox spacing="10">
-        <Label text="Autor Nombre:" />
-        <TextField fx:id="autorNombreTextField" prefHeight="25.0" prefWidth="175.0" />
-    </HBox>
-    <HBox spacing="10">
-        <Label text="Autor Nacionalidad:" />
-        <TextField fx:id="autorNacionalidadTextField" />
-    </HBox>
-    <Button onAction="#onAddAuthorClicked" text="Añadir Autor" />
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.javafxhibernate.HelloController">
+    <!-- Título -->
+    <Label text="Gestión de Biblioteca" style="-fx-font-size: 20px; -fx-font-weight: bold;" AnchorPane.topAnchor="10" AnchorPane.leftAnchor="10" />
 
-    <HBox spacing="10">
-        <Label text="Libro Título:" />
-        <TextField fx:id="libroTituloTextField" prefHeight="25.0" prefWidth="186.0" />
-    </HBox>
-    <HBox spacing="10">
-        <Label text="ISBN:" />
-        <TextField fx:id="libroIsbnTextField" prefHeight="25.0" prefWidth="220.0" />
-    </HBox>
-    <HBox spacing="10">
-        <Label text="Autor del Libro:" />
-        <TextField fx:id="libroAutorTextField" prefHeight="25.0" prefWidth="166.0" />
-    </HBox>
-    <Button onAction="#onAddBookClicked" text="Añadir Libro" />
+    <!-- Sección de Autores -->
+    <VBox spacing="10" AnchorPane.leftAnchor="10" AnchorPane.topAnchor="50">
+        <HBox spacing="10">
+            <TextField fx:id="tfNombreAutor" promptText="Nombre del Autor" />
+            <Button fx:id="btnAgregarAutor" text="Agregar" />
+            <Button fx:id="btnModificarAutor" text="Modificar" />
+            <Button fx:id="btnEliminarAutor" text="Eliminar" />
+            <Button fx:id="btnBuscarAutor" text="Buscar" />
+        </HBox>
+        <TextArea fx:id="textAreaResultados" prefHeight="150" prefWidth="400" editable="false" wrapText="true" />
+    </VBox>
 
-    <HBox spacing="10">
-        <Label text="Socio Nombre:" />
-        <TextField fx:id="socioNombreTextField" prefHeight="25.0" prefWidth="165.0" />
-    </HBox>
-    <HBox spacing="10">
-        <Label text="Dirección:" />
-        <TextField fx:id="socioDireccionTextField" prefHeight="25.0" prefWidth="192.0" />
-    </HBox>
-    <HBox spacing="10">
-        <Label text="Teléfono:" />
-        <TextField fx:id="socioTelefonoTextField" prefHeight="25.0" prefWidth="195.0" />
-    </HBox>
-    <Button onAction="#onAddSocioClicked" text="Añadir Socio" />
+    <!-- Sección de Libros -->
+    <VBox spacing="10" AnchorPane.leftAnchor="10" AnchorPane.topAnchor="200">
+        <HBox spacing="10">
+            <TextField fx:id="tfTituloLibro" promptText="Título del Libro" />
+            <Button fx:id="btnAgregarLibro" text="Agregar" />
+            <Button fx:id="btnModificarLibro" text="Modificar" />
+            <Button fx:id="btnEliminarLibro" text="Eliminar" />
+            <Button fx:id="btnBuscarLibro" text="Buscar" />
+        </HBox>
+    </VBox>
 
-    <HBox spacing="10">
-        <Label text="Libro a Prestar (ISBN):" />
-        <TextField fx:id="prestamoIsbnTextField" prefHeight="25.0" prefWidth="126.0" />
-    </HBox>
-    <HBox spacing="10">
-        <Label text="Socio ID:" />
-        <TextField fx:id="prestamoSocioIdTextField" prefHeight="25.0" prefWidth="194.0" />
-    </HBox>
-    <Button onAction="#onRegisterLoanClicked" text="Registrar Préstamo" />
+    <!-- Sección de Socios -->
+    <VBox spacing="10" AnchorPane.leftAnchor="10" AnchorPane.topAnchor="350">
+        <HBox spacing="10">
+            <TextField fx:id="tfNombreSocio" promptText="Nombre del Socio" />
+            <Button fx:id="btnAgregarSocio" text="Agregar" />
+            <Button fx:id="btnModificarSocio" text="Modificar" />
+            <Button fx:id="btnEliminarSocio" text="Eliminar" />
+            <Button fx:id="btnBuscarSocio" text="Buscar" />
+        </HBox>
+    </VBox>
 
-    <!-- Botones para actualizar y eliminar -->
-    <Button onAction="#onUpdateAuthorClicked" text="Actualizar Autor" />
-    <Button onAction="#onDeleteAuthorClicked" text="Eliminar Autor" />
-    <Button onAction="#onUpdateBookClicked" text="Actualizar Libro" />
-    <Button onAction="#onDeleteBookClicked" text="Eliminar Libro" />
-    <Button onAction="#onDeleteSocioClicked" text="Eliminar Socio" />
-</VBox>
+    <!-- Sección de Préstamos -->
+    <VBox spacing="10" AnchorPane.leftAnchor="10" AnchorPane.topAnchor="500">
+        <HBox spacing="10">
+            <Button fx:id="btnRealizarPrestamo" text="Realizar Préstamo" />
+            <Button fx:id="btnVerPrestamos" text="Ver Préstamos Activos" />
+        </HBox>
+    </VBox>
+
+</AnchorPane>
