@@ -1,12 +1,13 @@
-package DAO;
+package org.example.DAO;
 
-import Util.HibernateUtil;
-import entities.Libros;
+import org.example.Util.HibernateUtil;
+import org.example.entities.Libros;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import java.util.List;
 
-public class LibrosDAOImpl implements LibrosDAO {
+public class
+LibrosDAOImpl implements LibrosDAO {
 
     @Override
     public Libros update(Libros libros) {
@@ -85,6 +86,27 @@ public class LibrosDAOImpl implements LibrosDAO {
     public List<Libros> findAvailableBooks() {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             return session.createQuery("FROM Libros l WHERE l.prestado = false", Libros.class).list();
+        }
+    }
+
+    public Libros create(Libros libro) {
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            session.save(libro);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+        return libro;
+    }
+
+    public Libros findById(int libroId) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.get(Libros.class, libroId);
         }
     }
 }

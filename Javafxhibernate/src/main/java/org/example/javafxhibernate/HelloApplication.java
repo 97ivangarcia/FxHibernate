@@ -5,26 +5,25 @@
 
 package org.example.javafxhibernate;
 
-import java.io.IOException;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import java.io.IOException;
 
 public class HelloApplication extends Application {
-    public HelloApplication() {
-    }
-
+    @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("/org/example/javafxhibernate/HelloView.fxml"));
-        Scene scene = new Scene((Parent)fxmlLoader.load(), (double)600.0F, (double)400.0F);
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/org/example/Javafxhibernate/hello-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 600, 400);
         stage.setTitle("Gestiones");
         stage.setScene(scene);
+        stage.setResizable(false);
         stage.show();
     }
 
     public static void main(String[] args) {
-        launch(new String[0]);
+        launch();
     }
 }

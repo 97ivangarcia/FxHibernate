@@ -1,7 +1,7 @@
-package DAO;
+package org.example.DAO;
 
-import entities.Prestamos;
-import Util.HibernateUtil;
+import org.example.entities.Prestamos;
+import org.example.Util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 

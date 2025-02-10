@@ -1,8 +1,8 @@
 package Test;
 
-import DAO.SociosDAOImpl;
-import entities.Socios;
-import Util.HibernateUtil;
+import org.example.DAO.SociosDAOImpl;
+import org.example.entities.Socios;
+import org.example.Util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.junit.jupiter.api.*;

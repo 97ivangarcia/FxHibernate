@@ -1,6 +1,6 @@
-package DAO;
+package org.example.DAO;
 
-import entities.Prestamos;
+import org.example.entities.Prestamos;
 import java.util.List;
 
 public interface PrestamosDAO {

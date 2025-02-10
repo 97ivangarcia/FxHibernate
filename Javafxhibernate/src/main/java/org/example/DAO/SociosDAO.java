@@ -1,6 +1,6 @@
-package DAO;
+package org.example.DAO;
 
-import entities.Socios;
+import org.example.entities.Socios;
 
 import java.util.List;
 

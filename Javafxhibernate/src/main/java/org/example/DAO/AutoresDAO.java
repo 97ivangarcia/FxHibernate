@@ -1,6 +1,6 @@
-package DAO;
+package org.example.DAO;
 
-import entities.Autores;
+import org.example.entities.Autores;
 
 import java.util.List;
 
@@ -39,4 +39,6 @@ public interface AutoresDAO {
      * @return lista de autores
      */
     List<Autores> findAll();
+
+
 }

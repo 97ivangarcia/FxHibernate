@@ -1,8 +1,8 @@
 package Test;
 
-import DAO.AutoresDAOImpl;
-import entities.Autores;
-import Util.HibernateUtil;
+import org.example.DAO.AutoresDAOImpl;
+import org.example.entities.Autores;
+import org.example.Util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.junit.jupiter.api.*;

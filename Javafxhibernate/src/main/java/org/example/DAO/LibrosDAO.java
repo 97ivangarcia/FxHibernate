@@ -1,6 +1,6 @@
-package DAO;
+package org.example.DAO;
 
-import entities.Libros;
+import org.example.entities.Libros;
 import java.util.List;
 
 public interface LibrosDAO {
@@ -45,4 +45,11 @@ public interface LibrosDAO {
      * @return lista de libros disponibles
      */
     List<Libros> findAvailableBooks();
+
+    /**
+     * Añade un nuevo libro
+     * @param libros
+     * @return libro agregado
+     */
+    Libros create(Libros libros);
 }

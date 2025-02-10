@@ -1,7 +1,7 @@
-package DAO;
+package org.example.DAO;
 
-import entities.Socios;
-import Util.HibernateUtil;
+import org.example.entities.Socios;
+import org.example.Util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -118,6 +118,15 @@ public class SociosDAOImpl implements SociosDAO {
         } catch (Exception e) {
             e.printStackTrace();
             return List.of(); // Retorna una lista vacía en caso de error
+        }
+    }
+
+    public Socios findById(Integer socioId) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.get(Socios.class, socioId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null; // Retorna null en caso de error
         }
     }
 }

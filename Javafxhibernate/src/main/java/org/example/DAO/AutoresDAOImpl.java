@@ -1,7 +1,7 @@
-package DAO;
+package org.example.DAO;
 
-import entities.Autores;
-import Util.HibernateUtil;
+import org.example.entities.Autores;
+import org.example.Util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -100,6 +100,16 @@ public class AutoresDAOImpl implements AutoresDAO {
         } catch (Exception e) {
             e.printStackTrace();
             return List.of(); // Retorna una lista vacía en caso de error
+        }
+    }
+
+    public Autores findById(int autorId) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.get(Autores.class, autorId);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 }
