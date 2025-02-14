@@ -18,10 +18,11 @@ public class HelloController {
     private PrestamosDAO prestamosDAO = new PrestamosDAOImpl();
 
     @FXML
-    private TextArea textAreaResultados; // Área de texto para mostrar los resultados
+    private TextArea textAreaResultados;
+    // Área de texto para mostrar los resultados
 
     @FXML
-    private TextField tfNombreAutor, tfTituloLibro, tfNombreSocio;
+    private TextField tfNombreAutor, tfNacionalidadAutor, tfTituloLibro, tfISBNLibro, tfAutorLibro, tfEditorialLibro, tfAnioPublicacionLibro, tfNombreSocio, tfDireccionSocio, tfTelefonoSocio;
 
     @FXML
     private Button btnAgregarAutor, btnModificarAutor, btnEliminarAutor, btnBuscarAutor;
@@ -61,27 +62,32 @@ public class HelloController {
     // Métodos para la gestión de autores
     private void agregarAutor() {
         String nombre = tfNombreAutor.getText().trim();
-        if (nombre.isEmpty()) {
-            textAreaResultados.appendText("Por favor ingresa un nombre de autor válido.\n");
+        String nacionalidad = tfNacionalidadAutor.getText().trim();
+
+        if (nombre.isEmpty() || nacionalidad.isEmpty()) {
+            textAreaResultados.appendText("Por favor ingresa un nombre y nacionalidad del autor válidos.\n");
             return;
         }
-        Autores nuevoAutor = new Autores(null, nombre, "Desconocida");
+
+        Autores nuevoAutor = new Autores(null, nombre, nacionalidad);
         autoresDAO.create(nuevoAutor);
         textAreaResultados.appendText("Autor agregado exitosamente: " + nombre + "\n");
     }
 
     private void modificarAutor() {
         String nombre = tfNombreAutor.getText().trim();
-        if (nombre.isEmpty()) {
-            textAreaResultados.appendText("Por favor ingresa un nombre válido para modificar.\n");
+        String nacionalidad = tfNacionalidadAutor.getText().trim();
+
+        if (nombre.isEmpty() || nacionalidad.isEmpty()) {
+            textAreaResultados.appendText("Por favor ingresa un nombre y nacionalidad válidos para modificar.\n");
             return;
         }
-        // Lógica para modificar autor (actualización de base de datos)
-        // Asumimos que el autor ya existe en la base de datos, buscamos y actualizamos
+
         List<Autores> autoresEncontrados = autoresDAO.findByName(nombre);
         if (!autoresEncontrados.isEmpty()) {
             Autores autor = autoresEncontrados.get(0);
             autor.setNombre(nombre);
+            autor.setNacionalidad(nacionalidad);
             autoresDAO.update(autor);
             textAreaResultados.appendText("Autor modificado exitosamente: " + nombre + "\n");
         } else {
@@ -95,7 +101,7 @@ public class HelloController {
             textAreaResultados.appendText("Por favor ingresa un nombre válido para eliminar.\n");
             return;
         }
-        // Lógica para eliminar autor (debe existir primero en la base de datos)
+
         List<Autores> autoresEncontrados = autoresDAO.findByName(nombre);
         if (!autoresEncontrados.isEmpty()) {
             Autores autor = autoresEncontrados.get(0);
@@ -112,6 +118,7 @@ public class HelloController {
             textAreaResultados.appendText("Por favor ingresa un nombre válido.\n");
             return;
         }
+
         List<Autores> autoresEncontrados = autoresDAO.findByName(nombre);
         if (!autoresEncontrados.isEmpty()) {
             for (Autores autor : autoresEncontrados) {
@@ -125,11 +132,18 @@ public class HelloController {
     // Métodos para la gestión de libros
     private void agregarLibro() {
         String titulo = tfTituloLibro.getText().trim();
-        if (titulo.isEmpty()) {
-            textAreaResultados.appendText("Por favor ingresa un título de libro válido.\n");
+        String isbn = tfISBNLibro.getText().trim();
+        String autor = tfAutorLibro.getText().trim();
+        String editorial = tfEditorialLibro.getText().trim();
+        String anio = tfAnioPublicacionLibro.getText().trim();
+
+        if (titulo.isEmpty() || isbn.isEmpty() || autor.isEmpty() || editorial.isEmpty() || anio.isEmpty()) {
+            textAreaResultados.appendText("Por favor ingresa todos los campos del libro.\n");
             return;
         }
-        Libros nuevoLibro = new Libros(null, titulo, "ISBN001", "Autor Desconocido", "Editorial Desconocida", 2025);
+
+        int anioPublicacion = Integer.parseInt(anio);
+        Libros nuevoLibro = new Libros(null, titulo, isbn, autor, editorial, anioPublicacion);
         librosDAO.create(nuevoLibro);
         textAreaResultados.appendText("Libro agregado exitosamente: " + titulo + "\n");
     }
@@ -140,11 +154,11 @@ public class HelloController {
             textAreaResultados.appendText("Por favor ingresa un título válido para modificar.\n");
             return;
         }
-        // Lógica para modificar libro
+
         List<Libros> librosEncontrados = librosDAO.findByTitulo(titulo);
         if (!librosEncontrados.isEmpty()) {
             Libros libro = librosEncontrados.get(0);
-            libro.setTitulo(titulo); // Puedes modificar más campos aquí
+            libro.setTitulo(titulo);
             librosDAO.update(libro);
             textAreaResultados.appendText("Libro modificado exitosamente: " + titulo + "\n");
         } else {
@@ -158,7 +172,7 @@ public class HelloController {
             textAreaResultados.appendText("Por favor ingresa un título válido para eliminar.\n");
             return;
         }
-        // Lógica para eliminar libro
+
         List<Libros> librosEncontrados = librosDAO.findByTitulo(titulo);
         if (!librosEncontrados.isEmpty()) {
             Libros libro = librosEncontrados.get(0);
@@ -175,6 +189,7 @@ public class HelloController {
             textAreaResultados.appendText("Por favor ingresa un título válido.\n");
             return;
         }
+
         List<Libros> librosEncontrados = librosDAO.findByTitulo(titulo);
         if (!librosEncontrados.isEmpty()) {
             for (Libros libro : librosEncontrados) {
@@ -188,25 +203,18 @@ public class HelloController {
     // Métodos para la gestión de socios
     private void agregarSocio() {
         String nombre = tfNombreSocio.getText();
-        String direccion = "Sin dirección";  // Puedes agregar un valor predeterminado o obtenerlo de otro TextField
-        String telefono = "Sin teléfono";  // Similar al anterior, puedes agregar un valor predeterminado
+        String direccion = tfDireccionSocio.getText();
+        String telefono = tfTelefonoSocio.getText();
 
-        // Validar que el nombre no esté vacío
-        if (nombre.isEmpty()) {
-            textAreaResultados.appendText("Por favor ingresa un nombre válido.\n");
+        if (nombre.isEmpty() || direccion.isEmpty() || telefono.isEmpty()) {
+            textAreaResultados.appendText("Por favor ingresa todos los campos del socio.\n");
             return;
         }
 
-        // Crear un nuevo socio con los datos proporcionados
         Socios nuevoSocio = new Socios(null, nombre, direccion, telefono);
-
-        // Guardar el socio usando el DAO
         sociosDAO.create(nuevoSocio);
-
-        // Mostrar mensaje de éxito
         textAreaResultados.appendText("Socio agregado exitosamente: " + nombre + "\n");
     }
-
 
     private void modificarSocio() {
         String nombre = tfNombreSocio.getText().trim();
@@ -214,8 +222,18 @@ public class HelloController {
             textAreaResultados.appendText("Por favor ingresa un nombre válido para modificar.\n");
             return;
         }
-        // Lógica para modificar socio (similar a lo de los libros o autores)
-        textAreaResultados.appendText("Socio modificado: " + nombre + "\n");
+
+        List<Socios> sociosEncontrados = sociosDAO.findByName(nombre);
+        if (!sociosEncontrados.isEmpty()) {
+            Socios socio = sociosEncontrados.get(0);
+            socio.setNombre(nombre);
+            socio.setDireccion(tfDireccionSocio.getText());
+            socio.setTelefono(tfTelefonoSocio.getText());
+            sociosDAO.update(socio);
+            textAreaResultados.appendText("Socio modificado exitosamente: " + nombre + "\n");
+        } else {
+            textAreaResultados.appendText("Socio no encontrado: " + nombre + "\n");
+        }
     }
 
     private void eliminarSocio() {
@@ -224,8 +242,15 @@ public class HelloController {
             textAreaResultados.appendText("Por favor ingresa un nombre válido para eliminar.\n");
             return;
         }
-        // Lógica para eliminar socio
-        textAreaResultados.appendText("Socio eliminado: " + nombre + "\n");
+
+        List<Socios> sociosEncontrados = sociosDAO.findByName(nombre);
+        if (!sociosEncontrados.isEmpty()) {
+            Socios socio = sociosEncontrados.get(0);
+            sociosDAO.deleteById(socio.getId());
+            textAreaResultados.appendText("Socio eliminado exitosamente: " + nombre + "\n");
+        } else {
+            textAreaResultados.appendText("Socio no encontrado: " + nombre + "\n");
+        }
     }
 
     private void buscarSocio() {
@@ -234,24 +259,23 @@ public class HelloController {
             textAreaResultados.appendText("Por favor ingresa un nombre válido.\n");
             return;
         }
-        // Buscar socio
-        textAreaResultados.appendText("Socio encontrado: " + nombre + "\n");
+
+        List<Socios> sociosEncontrados = sociosDAO.findByName(nombre);
+        if (!sociosEncontrados.isEmpty()) {
+            for (Socios socio : sociosEncontrados) {
+                textAreaResultados.appendText("Socio encontrado: " + socio.getNombre() + "\n");
+            }
+        } else {
+            textAreaResultados.appendText("No se encontraron socios con ese nombre.\n");
+        }
     }
 
-    // Métodos para gestionar préstamos
+
     private void realizarPrestamo() {
-        // Lógica de préstamo
-        textAreaResultados.appendText("Préstamo realizado exitosamente.\n");
+        // Implementación del préstamo aquí
     }
 
     private void verPrestamos() {
-        List<Prestamos> prestamosActivos = prestamosDAO.findCurrentlyLoanedBooks();
-        if (prestamosActivos.isEmpty()) {
-            textAreaResultados.appendText("No hay préstamos activos.\n");
-        } else {
-            for (Prestamos prestamo : prestamosActivos) {
-                textAreaResultados.appendText("Préstamo activo: " + prestamo.getLibro().getTitulo() + "\n");
-            }
-        }
+        // Implementación de ver préstamos aquí
     }
 }

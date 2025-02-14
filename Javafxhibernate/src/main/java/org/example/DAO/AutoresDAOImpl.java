@@ -103,6 +103,8 @@ public class AutoresDAOImpl implements AutoresDAO {
         }
     }
 
+
+
     public Autores findById(int autorId) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             return session.get(Autores.class, autorId);

@@ -3,14 +3,15 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Pos?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.javafxhibernate.HelloController">
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.javafxhibernate.HelloController" stylesheets="@../../../css/styles.css">
     <!-- Título -->
     <Label text="Gestión de Biblioteca" style="-fx-font-size: 20px; -fx-font-weight: bold;" AnchorPane.topAnchor="10" AnchorPane.leftAnchor="10" />
 
     <!-- Sección de Autores -->
-    <VBox spacing="10" AnchorPane.leftAnchor="10" AnchorPane.topAnchor="50">
+    <VBox spacing="20" AnchorPane.leftAnchor="10" AnchorPane.topAnchor="70" AnchorPane.rightAnchor="10">
         <HBox spacing="10">
             <TextField fx:id="tfNombreAutor" promptText="Nombre del Autor" />
+            <TextField fx:id="tfNacionalidadAutor" promptText="Nacionalidad" />
             <Button fx:id="btnAgregarAutor" text="Agregar" />
             <Button fx:id="btnModificarAutor" text="Modificar" />
             <Button fx:id="btnEliminarAutor" text="Eliminar" />
@@ -20,9 +21,13 @@
     </VBox>
 
     <!-- Sección de Libros -->
-    <VBox spacing="10" AnchorPane.leftAnchor="10" AnchorPane.topAnchor="200">
+    <VBox spacing="20" AnchorPane.leftAnchor="10" AnchorPane.topAnchor="300" AnchorPane.rightAnchor="10">
         <HBox spacing="10">
             <TextField fx:id="tfTituloLibro" promptText="Título del Libro" />
+            <TextField fx:id="tfISBNLibro" promptText="ISBN del Libro" />
+            <TextField fx:id="tfAutorLibro" promptText="Autor del Libro" />
+            <TextField fx:id="tfEditorialLibro" promptText="Editorial del Libro" />
+            <TextField fx:id="tfAnioPublicacionLibro" promptText="Año de Publicación" />
             <Button fx:id="btnAgregarLibro" text="Agregar" />
             <Button fx:id="btnModificarLibro" text="Modificar" />
             <Button fx:id="btnEliminarLibro" text="Eliminar" />
@@ -31,9 +36,11 @@
     </VBox>
 
     <!-- Sección de Socios -->
-    <VBox spacing="10" AnchorPane.leftAnchor="10" AnchorPane.topAnchor="350">
+    <VBox spacing="20" AnchorPane.leftAnchor="10" AnchorPane.topAnchor="450" AnchorPane.rightAnchor="10">
         <HBox spacing="10">
             <TextField fx:id="tfNombreSocio" promptText="Nombre del Socio" />
+            <TextField fx:id="tfDireccionSocio" promptText="Dirección" />
+            <TextField fx:id="tfTelefonoSocio" promptText="Teléfono" />
             <Button fx:id="btnAgregarSocio" text="Agregar" />
             <Button fx:id="btnModificarSocio" text="Modificar" />
             <Button fx:id="btnEliminarSocio" text="Eliminar" />
@@ -41,12 +48,12 @@
         </HBox>
     </VBox>
 
+
     <!-- Sección de Préstamos -->
-    <VBox spacing="10" AnchorPane.leftAnchor="10" AnchorPane.topAnchor="500">
+    <VBox spacing="20" AnchorPane.leftAnchor="10" AnchorPane.topAnchor="650" AnchorPane.rightAnchor="10">
         <HBox spacing="10">
             <Button fx:id="btnRealizarPrestamo" text="Realizar Préstamo" />
             <Button fx:id="btnVerPrestamos" text="Ver Préstamos Activos" />
         </HBox>
     </VBox>
-
 </AnchorPane>
